@@ -1,0 +1,66 @@
+name: Deploy project
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20' # Specify Node.js version you need
+
+      - name: Install dependencies
+        run: |
+          cd react_app
+          npm ci
+
+      - name: Run tests
+        run: |
+          cd react_app
+          npm test
+
+  Deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20' # Specify Node.js version you need
+
+      - name: Install dependencies
+        run: |
+          cd react_app
+          npm ci
+
+      - name: Run npm build
+        run: |
+          cd react_app
+          npm build
+
+      - name: Auth to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS_2 }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          version: '>= 363.0.0'
+
+      - name: Use gcloud CLI
+        run: gcloud info
+
+      - name: Upload Storybook to GCS
+        run: |
+          gsutil -m cp -r /home/runner/_work/actions_practice/actions_practice/react_app/* gs://react_app

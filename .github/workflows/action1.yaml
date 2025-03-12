@@ -1,11 +1,23 @@
-name: 1st workflow
+name: app build
 on: workflow_dispatch
 jobs:
-  first-job:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: print greeting
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20' # Specify Node.js version you need
+
+      - name: Install dependencies
         run: |
-          echo "Hello world"
-      - name: print farewell
-        run: echo "cya later alligator"
+          cd react_app
+          npm ci
+
+      - name: Run tests
+        run: npm test

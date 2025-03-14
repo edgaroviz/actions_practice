@@ -33,7 +33,7 @@ jobs:
           npm ci
       - name: publish JS filename
         id: publish
-        run: find react_app/dist/assest/*.js -type f -execdir 'scriptfile={}' >> $GITHUB_OUTPUT ';'
+        run: find dist/assest/*.js -type f -execdir 'scriptfile={}' >> $GITHUB_OUTPUT ';'
       - name: Build website
         run: |
           cd react_app

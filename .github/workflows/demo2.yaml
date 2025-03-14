@@ -22,6 +22,8 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
+    outputs:
+      scriptfile: ${{ steps.publish.outputs.scriptfile }}
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -29,6 +31,9 @@ jobs:
         run: |
           cd react_app
           npm ci
+      - name: publish JS filename
+        id: publish
+        run: find react_app/dist/assest/*.js -type f -execdir 'scriptfile={}' >> $GITHUB_OUTPUT ';'
       - name: Build website
         run: |
           cd react_app
@@ -48,5 +53,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist-files
+      - name: Output contents
+        run: ls
+      - name: Output filename
+        run: echo "${{ needs.build.outputs.scriptfile }}"
       - name: Deploy
         run: echo "Deploying..."

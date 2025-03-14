@@ -32,6 +32,11 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
+      - name: Cache artifact
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         run: |
           cd react_app
@@ -39,8 +44,8 @@ jobs:
       - name: publish JS filename
         id: publish
         run: |
+          cd react_app/node_modules
           pwd
-          cd react_app
           ls
           find react_app/dist/assest/*.js -type f -execdir echo 'scriptfile={}' >> $GITHUB_OUTPUT ';'
       - name: Build website

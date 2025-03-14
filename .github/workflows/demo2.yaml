@@ -40,6 +40,7 @@ jobs:
         id: publish
         run: |
           pwd
+          cd react_app
           ls
           find react_app/dist/assest/*.js -type f -execdir echo 'scriptfile={}' >> $GITHUB_OUTPUT ';'
       - name: Build website

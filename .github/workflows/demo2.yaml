@@ -12,7 +12,12 @@ jobs:
       - name: Install dependencies
         run: |
           cd react_app
-          npm install
+          npm ci
+      - name: Cache artifact
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       # - name: Lint code
       #   run: npm run lint
       - name: Test code
@@ -33,7 +38,10 @@ jobs:
           npm ci
       - name: publish JS filename
         id: publish
-        run: find dist/assest/*.js -type f -execdir 'scriptfile={}' >> $GITHUB_OUTPUT ';'
+        run: |
+          pwd
+          ls
+          find dist/assest/*.js -type f -execdir 'scriptfile={}' >> $GITHUB_OUTPUT ';'
       - name: Build website
         run: |
           cd react_app

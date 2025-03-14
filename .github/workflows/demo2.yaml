@@ -41,7 +41,7 @@ jobs:
         run: |
           pwd
           ls
-          find dist/assest/*.js -type f -execdir 'scriptfile={}' >> $GITHUB_OUTPUT ';'
+          find react_app/dist/assest/*.js -type f -execdir echo 'scriptfile={}' >> $GITHUB_OUTPUT ';'
       - name: Build website
         run: |
           cd react_app
